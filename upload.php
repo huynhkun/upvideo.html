@@ -1,8 +1,8 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ki?m tra xem file có du?c ch?n không
+    // Ki?m tra xem file cÃ³ du?c ch?n khÃ´ng
     if (isset($_FILES['video']) && $_FILES['video']['error'] == 0) {
-        // L?y thông tin file video
+        // L?y thÃ´ng tin file video
         $videoFile = $_FILES['video']['tmp_name'];
         $fileName = $_FILES['video']['name'];
 
@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'MyCID' => '17' // My class ID
         );
 
-        // G?i video lên Abyss
+        // G?i video lÃªn Abyss
         uploadToAbyss($formData);
 
-        // G?i video lên Helvid
+        // G?i video lÃªn Helvid
         uploadToHelvid($formData);
     } else {
-        echo 'Vui lòng ch?n m?t video d? t?i lên!';
+        echo 'Vui lÃ²ng ch?n m?t video d? t?i lÃªn!';
     }
 }
 
@@ -44,9 +44,9 @@ function uploadToAbyss($formData) {
     } else {
         $data = json_decode($response, true);
         if ($data && isset($data['link'])) {
-            echo '<p>Video dã du?c t?i lên Abyss! Link: ' . $data['link'] . '</p>';
+            echo '<p>Video dÃ£ du?c t?i lÃªn Abyss! Link: ' . $data['link'] . '</p>';
         } else {
-            echo '<p>L?i khi t?i video lên Abyss.</p>';
+            echo '<p>L?i khi t?i video lÃªn Abyss.</p>';
         }
     }
 
@@ -69,29 +69,12 @@ function uploadToHelvid($formData) {
     } else {
         $data = json_decode($response, true);
         if ($data && isset($data['slug'])) {
-            echo '<p>Video dã du?c t?i lên Helvid! Link: ' . $data['slug'] . '</p>';
+            echo '<p>Video dÃ£ du?c t?i lÃªn Helvid! Link: ' . $data['slug'] . '</p>';
         } else {
-            echo '<p>L?i khi t?i video lên Helvid.</p>';
+            echo '<p>L?i khi t?i video lÃªn Helvid.</p>';
         }
     }
 
     curl_close($ch);
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Video</title>
-</head>
-<body>
-    <h2>Upload Video</h2>
-    <form action="upload_video.php" method="post" enctype="multipart/form-data">
-        <label for="video">Ch?n video:</label>
-        <input type="file" name="video" id="video" required><br><br>
-        <button type="submit">T?i lên</button>
-    </form>
-</body>
-</html>
