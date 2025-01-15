@@ -1,27 +1,27 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ki?m tra xem file có du?c ch?n không
+    // Kiểm tra xem file có được chọn không
     if (isset($_FILES['video']) && $_FILES['video']['error'] == 0) {
-        // L?y thông tin file video
+        // Lấy thông tin file video
         $videoFile = $_FILES['video']['tmp_name'];
         $fileName = $_FILES['video']['name'];
 
-        // T?o FormData d? g?i video
+        // Tạo FormData để gửi video
         $formData = array(
             'file' => new CURLFile($videoFile, 'video/mp4', $fileName),
-            'API Key' => '8SKrnxC82ypbpgDNiiMApcuBE7Y0E', // API Key c?a Helvid
+            'API Key' => '8SKrnxC82ypbpgDNiiMApcuBE7Y0E', // API Key của Helvid
             'CID' => '15', // Video class ID
             'FID' => '18', // Server ID
             'MyCID' => '17' // My class ID
         );
 
-        // G?i video lên Abyss
+        // Gửi video lên Abyss
         uploadToAbyss($formData);
 
-        // G?i video lên Helvid
+        // Gửi video lên Helvid
         uploadToHelvid($formData);
     } else {
-        echo 'Vui lòng ch?n m?t video d? t?i lên!';
+        echo 'Vui lòng chọn một video để tải lên!';
     }
 }
 
@@ -40,13 +40,13 @@ function uploadToAbyss($formData) {
     $response = curl_exec($ch);
 
     if(curl_errno($ch)) {
-        echo 'L?i cURL: ' . curl_error($ch);
+        echo 'Lỗi cURL: ' . curl_error($ch);
     } else {
         $data = json_decode($response, true);
         if ($data && isset($data['link'])) {
-            echo '<p>Video dã du?c t?i lên Abyss! Link: ' . $data['link'] . '</p>';
+            echo '<p>Video đã được tải lên Abyss! Link: ' . $data['link'] . '</p>';
         } else {
-            echo '<p>L?i khi t?i video lên Abyss.</p>';
+            echo '<p>Lỗi khi tải video lên Abyss.</p>';
         }
     }
 
@@ -65,16 +65,33 @@ function uploadToHelvid($formData) {
     $response = curl_exec($ch);
 
     if(curl_errno($ch)) {
-        echo 'L?i cURL: ' . curl_error($ch);
+        echo 'Lỗi cURL: ' . curl_error($ch);
     } else {
         $data = json_decode($response, true);
         if ($data && isset($data['slug'])) {
-            echo '<p>Video dã du?c t?i lên Helvid! Link: ' . $data['slug'] . '</p>';
+            echo '<p>Video đã được tải lên Helvid! Link: ' . $data['slug'] . '</p>';
         } else {
-            echo '<p>L?i khi t?i video lên Helvid.</p>';
+            echo '<p>Lỗi khi tải video lên Helvid.</p>';
         }
     }
 
     curl_close($ch);
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video</title>
+</head>
+<body>
+    <h2>Upload Video</h2>
+    <form action="index.php" method="post" enctype="multipart/form-data">
+        <label for="video">Chọn video:</label>
+        <input type="file" name="video" id="video" required><br><br>
+        <button type="submit">Tải lên</button>
+    </form>
+</body>
+</html>
